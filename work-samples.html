@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moze Mozzo Work Samples</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+/* VOICE work, a calm professional portfolio a hiring manager scans in a minute
+   IDEA a printed course catalogue: each sample is an entry with its format, tools and a way in
+   PICTURE her headshot, set on a red offset block
+   COLOUR white ground, ink #16201a, forest #2f5d3a accent, sage #7c9a76, pale sage panels #e6ede3
+   TYPE Source Serif 4 600 display + Inter text
+   LAYOUT laptop: intro left, picture right, then full-width catalogue bands; phone: title, picture, nav, entries */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#111a14);--ink:light-dark(#16201a,#eef3ec);--mute:light-dark(#4d5a51,#a9b8ab);--red:light-dark(#2f5d3a,#8fc398);--slate:light-dark(#7c9a76,#a9c4a2);--panel:light-dark(#e6ede3,#18241c);--line:light-dark(#cbd8c7,#2c3b30);--card:light-dark(#ffffff,#142019);--paper:light-dark(#ffffff,#1d2b22)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:inherit}
+.band{padding-block:clamp(28px,4vw,56px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.tab{display:inline-block;background:var(--red);color:var(--bg);font-weight:600;font-size:14px;padding:6px 12px;margin-bottom:20px}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+h1,h2{font-family:"Source Serif 4",Georgia,serif;font-weight:600;letter-spacing:-.02em;line-height:1.05;text-wrap:balance;margin:0}
+h1{font-size:clamp(36px,5vw,52px)}
+.role{font-size:20px;color:var(--slate);font-weight:500;margin:10px 0 18px}
+.intro{max-width:56ch;margin:0 0 24px;font-size:17px}
+.note{font-size:14px;color:var(--mute);margin:0 0 24px;max-width:56ch}
+nav{display:flex;flex-wrap:wrap;gap:8px}
+nav a{text-decoration:none;font-size:14px;font-weight:500;padding:10px 14px;border:1px solid var(--line);min-height:44px;display:inline-flex;align-items:center}
+nav a:hover,nav a:focus-visible{border-color:var(--ink)}
+.pic{width:100%;max-width:440px;justify-self:end;aspect-ratio:1/1;background:var(--panel);box-shadow:16px 16px 0 var(--red)}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.sec{border-top:1px solid var(--line)}
+.sec.alt{background:var(--panel)}
+.head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(16px,3vw,48px);align-items:end;margin-bottom:28px}
+h2{font-size:clamp(28px,3.4vw,40px)}
+.head p{margin:0;color:var(--mute);max-width:62ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column}
+.thumb{background:var(--panel);height:120px;border-bottom:1px solid var(--line)}
+.alt .thumb{background:var(--bg)}
+.thumb svg{width:100%;height:100%;display:block}
+.body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.body h3{font-size:18px;line-height:1.25;margin:0}
+.body p{margin:0;font-size:15px}
+.tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.tools span{font-size:13px;background:var(--panel);color:var(--ink);padding:3px 8px}
+.alt .tools span{background:var(--bg)}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;background:var(--ink);color:var(--bg);text-decoration:none;font-size:14px;font-weight:600}
+.btn:hover,.btn:focus-visible{background:var(--red);color:var(--bg)}
+.btn svg{width:14px;height:14px}
+.ix{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:12px}
+.tile{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;align-items:start;padding:16px;background:var(--card);border:1px solid var(--line);text-decoration:none;min-height:44px}
+.tile:hover,.tile:focus-visible{border-color:var(--red)}
+.tile svg{width:44px;height:44px}
+.tile b{display:block;font-size:15px;line-height:1.3;margin-bottom:4px}
+.tile span{font-size:14px;color:var(--mute);line-height:1.45}
+.ixtools{margin:0 0 20px;font-size:14px;color:var(--mute)}
+.ixtools b{color:var(--ink);font-weight:600}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,3vw,40px)}
+.split h3.sub{font-family:"Source Serif 4",Georgia,serif;font-size:24px;margin:0 0 6px;letter-spacing:-.01em}
+.split .lead{margin:0 0 18px;color:var(--mute);font-size:15px}
+.split .grid{grid-template-columns:minmax(0,1fr)}
+footer{border-top:1px solid var(--line)}
+footer p{margin:0;font-size:17px;max-width:60ch}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+@media(max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){.hero{grid-template-columns:minmax(0,1fr)}.pic{max-width:300px;justify-self:start;box-shadow:10px 10px 0 var(--red)}.head{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:no-preference){.card,.tile{transition:border-color .15s}}
+</style>
+</head>
+<body>
+
+<header class="band">
+  <div class="wrap hero">
+    <div>
+      <span class="tab">Work samples</span>
+      <h1>Caitlin &ldquo;Moze&rdquo; Mozzo</h1>
+      <p class="role">Learning Designer</p>
+      <p class="intro">Training I've built for customer service and sales teams, with the tools I used for each one. Click any sample to open it.</p>
+      <p class="note">Samples from my most recent role are shown under a fictional company, Lead Source, to protect proprietary information.</p>
+      <nav aria-label="Sections">
+        <a href="#elearning">eLearning</a>
+        <a href="#interactions">Custom interactions</a>
+        <a href="#ai">AI and templates</a>
+        <a href="#job-aids">Job aids and video</a>
+      </nav>
+    </div>
+    <div class="pic"><img src="headshot.jpg" alt="Headshot of Caitlin Moze Mozzo" width="720" height="720"></div>
+  </div>
+</header>
+
+<section class="band sec" id="elearning">
+  <div class="wrap">
+    <div class="head"><h2>eLearning and program design</h2><p>From the pitch to the standards to the finished course. The first three are one series from the Lead Source learning library.</p></div>
+    <div class="grid" id="g-elearn"></div>
+  </div>
+</section>
+
+<section class="band sec alt" id="interactions">
+  <div class="wrap">
+    <div class="head"><h2>Custom Rise interactions built with AI</h2><p>Custom HTML code blocks built with AI to go beyond Rise's built-in blocks. I also built Claude skills with our branding so my team could make these same blocks themselves, which scaled the work beyond just me.</p></div>
+    <p class="ixtools"><b>Tools:</b> Claude, Google Gemini, custom HTML/CSS/JavaScript, Articulate Rise 360, Google Apps Script</p>
+    <div class="ix" id="g-ix"></div>
+  </div>
+</section>
+
+<section class="band sec" id="ai">
+  <div class="wrap split">
+    <div>
+      <h3 class="sub">AI workflows</h3>
+      <p class="lead">Custom Gems that turn source content into ready-to-use training materials.</p>
+      <div class="grid" id="g-ai"></div>
+    </div>
+    <div>
+      <h3 class="sub">Templates and standards</h3>
+      <p class="lead">Tools that help a whole team build content that looks and works the same.</p>
+      <div class="grid" id="g-tpl"></div>
+    </div>
+  </div>
+</section>
+
+<section class="band sec alt" id="job-aids">
+  <div class="wrap">
+    <div class="head"><h2>Facilitation, job aids and video</h2><p>Quick-reference and live training resources for frontline teams and the people who coach them.</p></div>
+    <div class="grid" id="g-jobs"></div>
+  </div>
+</section>
+
+<footer class="band">
+  <div class="wrap"><p>Thanks for taking a look! I'd love to walk you through any of these in more detail.</p></div>
+</footer>
+
+<script>
+{
+const D='https://drive.google.com/file/d/';
+const G='https://mozesus.github.io/portfolio-interactions/';
+const arrow='<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 11 L11 3 M5 3 H11 V9" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+
+const thumbs={
+ doc:'<rect x="105" y="14" width="70" height="92" fill="var(--paper)" stroke="var(--line)"/><rect x="115" y="26" width="38" height="7" fill="var(--slate)"/><g fill="var(--line)"><rect x="115" y="42" width="50" height="4"/><rect x="115" y="52" width="44" height="4"/><rect x="115" y="62" width="48" height="4"/><rect x="115" y="78" width="50" height="4"/><rect x="115" y="88" width="36" height="4"/></g>',
+ course:'<rect x="70" y="18" width="140" height="86" fill="var(--paper)" stroke="var(--ink)"/><rect x="70" y="18" width="140" height="14" fill="var(--ink)"/><rect x="84" y="44" width="54" height="46" fill="var(--panel)"/><path d="M104 56 l14 11 l-14 11z" fill="var(--red)"/><g fill="var(--line)"><rect x="148" y="46" width="48" height="5"/><rect x="148" y="58" width="40" height="5"/><rect x="148" y="70" width="44" height="5"/></g>',
+ home:'<rect x="70" y="18" width="140" height="86" fill="var(--paper)" stroke="var(--ink)"/><rect x="70" y="18" width="140" height="14" fill="var(--ink)"/><path d="M110 92 v-30 l30 -22 l30 22 v30z" fill="var(--panel)" stroke="var(--slate)" stroke-width="2"/><rect x="132" y="72" width="16" height="20" fill="var(--red)"/>',
+ card:'<rect x="98" y="12" width="84" height="96" fill="var(--paper)" stroke="var(--line)"/><rect x="98" y="12" width="84" height="20" fill="var(--slate)"/><path d="M114 44 h52 l-12 16 h-28z M126 64 h28 l-8 12 h-12z M134 80 h12 v10 h-12z" fill="var(--red)"/><g fill="var(--line)"><rect x="108" y="96" width="64" height="4"/></g>',
+ coach:'<rect x="90" y="14" width="100" height="92" fill="var(--paper)" stroke="var(--line)"/><rect x="90" y="14" width="100" height="18" fill="var(--ink)"/><g fill="var(--slate)"><circle cx="104" cy="46" r="5"/><circle cx="104" cy="64" r="5"/><circle cx="104" cy="82" r="5"/></g><g fill="var(--line)"><rect x="116" y="43" width="60" height="5"/><rect x="116" y="61" width="52" height="5"/><rect x="116" y="79" width="58" height="5"/></g><path d="M170 20 l3 5 l5 1 l-4 4 l1 5 l-5 -3 l-5 3 l1 -5 l-4 -4 l5 -1z" fill="var(--red)"/>',
+ slides:'<rect x="62" y="30" width="90" height="56" fill="var(--paper)" stroke="var(--line)"/><rect x="96" y="22" width="100" height="62" fill="var(--paper)" stroke="var(--ink)"/><rect x="96" y="22" width="100" height="12" fill="var(--slate)"/><g fill="var(--red)"><rect x="108" y="44" width="14" height="14"/></g><g fill="var(--slate)"><rect x="126" y="44" width="14" height="14"/></g><g fill="var(--panel)" stroke="var(--line)"><rect x="144" y="44" width="14" height="14"/></g><g fill="var(--line)"><rect x="108" y="66" width="60" height="5"/></g>',
+ guide:'<rect x="100" y="12" width="80" height="96" fill="var(--paper)" stroke="var(--line)"/><g fill="none" stroke="var(--line)"><rect x="110" y="22" width="60" height="22"/><line x1="140" y1="22" x2="140" y2="44"/><line x1="110" y1="33" x2="170" y2="33"/></g><g fill="var(--slate)"><rect x="110" y="54" width="10" height="10"/><rect x="110" y="72" width="10" height="10"/><rect x="110" y="90" width="10" height="10"/></g><g fill="var(--line)"><rect x="126" y="57" width="44" height="4"/><rect x="126" y="75" width="38" height="4"/><rect x="126" y="93" width="42" height="4"/></g>',
+ map:'<rect x="92" y="12" width="96" height="96" fill="var(--paper)" stroke="var(--line)"/><path d="M104 40 q14 -14 34 -6 t40 4 v40 q-20 10 -40 0 t-34 6z" fill="var(--panel)" stroke="var(--slate)" stroke-width="1.5"/><circle cx="150" cy="56" r="7" fill="var(--red)"/><path d="M150 63 v8" stroke="var(--red)" stroke-width="2"/><g fill="var(--line)"><rect x="104" y="92" width="72" height="5"/></g>',
+ video:'<rect x="66" y="18" width="148" height="84" fill="var(--ink)"/><circle cx="140" cy="56" r="20" fill="var(--red)"/><path d="M134 46 l16 10 l-16 10z" fill="#fff"/><rect x="78" y="88" width="124" height="4" fill="var(--mute)"/><rect x="78" y="88" width="50" height="4" fill="var(--red)"/>'
+};
+const th=k=>'<div class="thumb" aria-hidden="true"><svg viewBox="0 0 280 120" preserveAspectRatio="xMidYMid meet">'+thumbs[k]+'</svg></div>';
+
+const card=s=>'<article class="card">'+th(s.k)+'<div class="body"><h3>'+s.t+'</h3><p>'+s.d+'</p><div class="tools">'+s.tools.map(x=>'<span>'+x+'</span>').join('')+'</div><div class="links">'+s.links.map(l=>'<a class="btn" href="'+l[1]+'" target="_blank" rel="noopener">'+l[0]+arrow+'</a>').join('')+'</div></div></article>';
+
+const elearn=[
+ {k:'doc',t:'The Expert Communicator Series Pitch',d:'A four-module PD series with flexible delivery options and a capstone certification.',tools:['Google Docs'],links:[['View pitch',D+'1irY-VEgu946h1aACHXwKQ1XGbxyZrosL/view?usp=sharing']]},
+ {k:'doc',t:'Communication Guidelines',d:'Soft skill standards for tone, expert language, and questioning.',tools:['Google Docs'],links:[['View guidelines',D+'1wjxO0DUOHydwblb9-yomXFtYNOdt-VpF/view?usp=sharing']]},
+ {k:'course',t:'The Questioning Funnel eLearning',d:'A microlearning from the series that teaches reps a broad-to-specific discovery method.',tools:['Articulate Rise 360','Custom HTML code blocks built with AI'],links:[['Open eLearning','https://d2hi7gyiv8eckt.cloudfront.net']]},
+ {k:'home',t:'Typical American Home Tour',d:'A virtual home walkthrough that builds context for offshore reps.',tools:['Articulate Storyline 360'],links:[['Open eLearning','https://d2hm0jjos5lmkr.cloudfront.net']]}
+];
+const ai=[
+ {k:'card',t:'Questioning Funnel One Pager',d:'Generated from module content by a custom Gem I built so operations partners could create job aids for their teams on demand.',tools:['Google Gemini (custom Gem)'],links:[['View one pager',D+'1ELe7ghhRGvuUYFAbE9JBDTL7e4pEAZoH/view?usp=sharing']]},
+ {k:'coach',t:'Escalation Coaching Card',d:'A manager coaching card generated by my Coaching Card Gem.',tools:['Google Gemini (custom Gem)'],links:[['View coaching card',D+'1BOfprkMEhhxi4ZoFYYFzKvd7mBZf4fr1/view?usp=sharing']]}
+];
+const tpl=[
+ {k:'slides',t:'Live Training Slide Template',d:'A sample from the full team template I built, with brand colors, guidelines, and ready-made layouts so trainers could build their own slides, with me reviewing and approving them.',tools:['Google Slides'],links:[['View template','https://docs.google.com/presentation/d/1PM4_tQusnsW4vZWAclUWoRR2vLC-4_6rhHUKajAGGjU/edit?usp=sharing']]},
+ {k:'guide',t:'Facilitator Guide Template',d:'A standard FG layout so every guide looks and works the same.',tools:['Google Docs'],links:[['View template','https://docs.google.com/document/d/1s9dS_8GYMijFpW6vj2TG9EKIXdbG6NdzjYzbsDqHE7o/edit?usp=sharing']]}
+];
+const jobs=[
+ {k:'guide',t:'Product Compliment Power Lab + Reference Guide',d:'A workshop and quick reference I built for BPO trainers and leaders to facilitate on their own.',tools:['Google Docs'],links:[['Facilitator guide',D+'1H2iGnIeKR7mzuCw3IDZ1fbFERcjLCw_v/view?usp=sharing'],['Reference guide',D+'1_UMqo-nmyBakYH_7q5Wq9Ed6QBX5rm7p/view?usp=sharing']]},
+ {k:'map',t:'Turning Location Into Sales',d:'A one pager on seasonality and location for sales reps.',tools:['Canva'],links:[['View one pager',D+'1_DsdCczhuWG_G6oDx_Wc5ljOFzT5-7zT/view?usp=sharing']]},
+ {k:'video',t:'Chrome Box Setup Video',d:'A step-by-step device setup video for new hires.',tools:['Synthesia'],links:[['Watch video','https://chrome-box-setup.s3.us-east-1.amazonaws.com/Chrome+Box+Setup+Video.mp4']]}
+];
+
+const ic={
+ reveal:'<rect x="4" y="6" width="36" height="8" fill="var(--slate)"/><rect x="4" y="18" width="36" height="8" fill="var(--panel)" stroke="var(--line)"/><rect x="4" y="30" width="36" height="8" fill="var(--panel)" stroke="var(--line)"/><path d="M33 9 l3 2 l-3 2" stroke="#fff" fill="none" stroke-width="1.5"/>',
+ spot:'<rect x="4" y="8" width="24" height="10" rx="5" fill="var(--panel)" stroke="var(--line)"/><rect x="16" y="22" width="24" height="10" rx="5" fill="var(--slate)"/><circle cx="28" cy="27" r="13" fill="none" stroke="var(--red)" stroke-width="2"/>',
+ branch:'<circle cx="8" cy="22" r="5" fill="var(--slate)"/><path d="M13 22 h8 M21 22 l10 -12 M21 22 l10 12" stroke="var(--ink)" stroke-width="2" fill="none"/><circle cx="35" cy="10" r="5" fill="var(--red)"/><circle cx="35" cy="34" r="5" fill="var(--panel)" stroke="var(--line)"/>',
+ mc:'<g fill="none" stroke="var(--line)" stroke-width="1.5"><rect x="4" y="5" width="36" height="9"/><rect x="4" y="30" width="36" height="9"/></g><rect x="4" y="17.5" width="36" height="9" fill="var(--red)"/><path d="M40 22 h2" stroke="var(--ink)"/>',
+ chart:'<rect x="4" y="4" width="16" height="7" fill="var(--slate)"/><rect x="22" y="4" width="16" height="7" fill="var(--panel)" stroke="var(--line)"/><path d="M4 38 L14 30 L24 32 L40 16" stroke="var(--red)" stroke-width="2.5" fill="none"/><path d="M4 40 h36" stroke="var(--line)"/>',
+ sim:'<rect x="4" y="6" width="36" height="30" fill="var(--paper)" stroke="var(--ink)"/><rect x="4" y="6" width="36" height="6" fill="var(--ink)"/><rect x="10" y="18" width="16" height="5" fill="var(--line)"/><rect x="10" y="26" width="12" height="5" fill="var(--slate)"/><path d="M28 26 l8 6 l-4 1 l2 4 l-2 1 l-2 -4 l-3 3z" fill="var(--red)"/>',
+ compare:'<rect x="3" y="8" width="17" height="28" fill="var(--panel)" stroke="var(--line)"/><rect x="24" y="8" width="17" height="28" fill="var(--slate)"/><g fill="var(--line)"><rect x="6" y="14" width="11" height="3"/><rect x="6" y="21" width="9" height="3"/></g><g fill="#fff"><rect x="27" y="14" width="11" height="3"/><rect x="27" y="21" width="9" height="3"/></g>',
+ check:'<rect x="4" y="4" width="36" height="12" fill="var(--panel)" stroke="var(--line)"/><path d="M6 24 l3 3 l5 -6 M6 35 l3 3 l5 -6" stroke="var(--red)" stroke-width="2" fill="none"/><g fill="var(--line)"><rect x="18" y="23" width="20" height="4"/><rect x="18" y="34" width="16" height="4"/></g>',
+ commit:'<rect x="4" y="6" width="26" height="30" fill="var(--panel)" stroke="var(--line)"/><path d="M10 20 l4 4 l8 -9" stroke="var(--red)" stroke-width="2.5" fill="none"/><path d="M32 22 h8 M36 18 l4 4 l-4 4" stroke="var(--slate)" stroke-width="2" fill="none"/>',
+ sort:'<rect x="3" y="4" width="17" height="36" fill="none" stroke="var(--line)"/><rect x="24" y="4" width="17" height="36" fill="none" stroke="var(--line)"/><rect x="6" y="8" width="11" height="6" fill="var(--slate)"/><rect x="6" y="17" width="11" height="6" fill="var(--slate)"/><rect x="27" y="8" width="11" height="6" fill="var(--red)"/><rect x="27" y="26" width="11" height="6" fill="var(--panel)" stroke="var(--red)" stroke-dasharray="2 2"/>'
+};
+const ix=[
+ ['reveal','Click-Through Text Section','Bite-size content reveals','Click_Through_in_Text_Section.html'],
+ ['spot','Conversation Spotlight','Calls out key moments in a customer interaction','Conversation_Spotlight.html'],
+ ['branch','Conversation with Branching','Choices shape the call','Conversation_with_Branching.html'],
+ ['mc','Multiple Choice Branching Conversation','Each answer changes the outcome','Multiple_Choice_Branching_Conversation.html'],
+ ['chart','Forecast Pacing Simulator','Reveals chunk definitions, and tabs show the concept changing visually','Forecast_Pacing_Simulator.html'],
+ ['sim','Salesforce Feedback Sim','Guided software walkthrough','Salesforce%20Feedback%20Sim%20Walkthrough.html'],
+ ['compare','Model Answer Comparison',"Compare your response to an expert's",'Model_Answer_Comparison.html'],
+ ['check','Open Response + Self-Checklist','Write, compare, and self-score','Open_Response__Model_Answer__Self_Checklist.html'],
+ ['commit','Reflection + Commitment','Learners commit to an on-the-job action, and responses are pulled from Rise with Google Apps Script','Reflection_Multiplce_Choice_Commitment.html'],
+ ['sort','Sorting Responses','Sort strong vs. weak responses','Sorting_Responses.html']
+];
+
+const put=(id,h)=>{const el=document.getElementById(id);if(el)el.innerHTML=h;};
+put('g-elearn',elearn.map(card).join(''));
+put('g-ai',ai.map(card).join(''));
+put('g-tpl',tpl.map(card).join(''));
+put('g-jobs',jobs.map(card).join(''));
+put('g-ix',ix.map(i=>'<a class="tile" href="'+G+i[3]+'" target="_blank" rel="noopener"><svg viewBox="0 0 44 44" aria-hidden="true">'+ic[i[0]]+'</svg><div><b>'+i[1]+'</b><span>'+i[2]+'</span></div></a>').join(''));
+}
+</script>
+</body>
+</html>
