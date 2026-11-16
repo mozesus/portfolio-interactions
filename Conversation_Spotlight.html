@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spotlight Conversation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    background: #fff;
+    color: #24272B;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  .intro {
+    max-width: 720px;
+    margin: 0 auto 1.5rem;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .outer {
+    max-width: 720px;
+    margin: 0 auto;
+    border: 2.5px solid #24272B;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .convo-header {
+    background: #24272B;
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #2D8CFF;
+  }
+
+  .header-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.04em;
+  }
+
+  .convo-body {
+    padding: 1.25rem 1.25rem 0;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .message-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .message-row.visible { opacity: 1; transform: translateY(0); }
+  .message-row.pro-row { flex-direction: row; }
+  .message-row.rep-row { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .pro-avatar { background: #DDE0E5; color: #24272B; }
+  .rep-avatar { background: #2D8CFF; color: #fff; }
+
+  .bubble-wrap {
+    display: flex;
+    flex-direction: column;
+    max-width: 65%;
+  }
+
+  .rep-row .bubble-wrap { align-items: flex-end; }
+
+  .speaker-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #24272B;
+    margin-bottom: 4px;
+    opacity: 0.45;
+  }
+
+  .bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #24272B;
+  }
+
+  .pro-bubble {
+    background: #F2F4F7;
+    border: 1.5px solid #DDE0E5;
+    border-top-left-radius: 2px;
+  }
+
+  .rep-bubble {
+    background: #F6EBFE;
+    border: 1.5px solid #E8CEFD;
+    border-top-right-radius: 2px;
+  }
+
+  .spotlight {
+    background: #E8CEFD;
+    border-radius: 3px;
+    padding: 1px 2px;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+
+  /* side panel */
+  .side-panel {
+    display: none;
+    margin-top: 8px;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+    animation: fadeUp 0.25s ease;
+  }
+
+  .side-panel.visible { display: flex; }
+
+  .side-panel-bar {
+    width: 3px;
+    border-radius: 3px;
+    background: #2D8CFF;
+    align-self: stretch;
+    flex-shrink: 0;
+    min-height: 100%;
+  }
+
+  .side-panel-content { flex: 1; }
+
+  .side-panel-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #2D8CFF;
+    margin-bottom: 3px;
+  }
+
+  .side-panel-text {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #24272B;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .completion-card {
+    display: none;
+    margin: 1.25rem;
+    background: #24272B;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    color: #fff;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .completion-card.visible { display: block; }
+
+  .completion-flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 0.65rem;
+  }
+
+  .flow-pill {
+    background: #2D8CFF;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .flow-arrow { color: #E8CEFD; font-weight: 700; font-size: 0.85rem; }
+
+  .completion-note {
+    margin-top: 0.75rem;
+    font-size: 0.88rem;
+    color: #E8CEFD;
+    line-height: 1.55;
+  }
+
+  .convo-footer {
+    padding: 1rem 1.25rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1.5px solid #DDE0E5;
+    margin-top: 1.25rem;
+    gap: 1rem;
+  }
+
+  .progress-dots { display: flex; gap: 6px; align-items: center; }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #DDE0E5;
+    transition: background 0.2s;
+  }
+
+  .dot.done { background: #24272B; }
+  .dot.active { background: #2D8CFF; }
+
+  .step-counter { font-size: 0.85rem; font-weight: 500; color: #24272B; }
+
+  .next-btn {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    background: #2D8CFF;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.4rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .next-btn:hover { background: #13297A; }
+  .next-btn:active { transform: scale(0.97); }
+  .next-btn:disabled { background: #DDE0E5; color: #6E737B; cursor: default; }
+</style>
+</head>
+<body>
+
+<p class="intro">A pro calls in confused about a charge on their account. Watch how the rep breaks down the billing clearly and calmly — and notice what makes the explanation land. Use the <strong>Next</strong> button to move the conversation forward.</p>
+
+<div class="outer">
+  <div class="convo-header">
+    <div class="header-dot"></div>
+    <span class="header-label">Live call</span>
+  </div>
+
+  <div class="convo-body" id="convo-body"></div>
+
+  <div class="completion-card" id="completion-card">
+    The rep used a clear structure:
+    <div class="completion-flow">
+      <span class="flow-pill">Acknowledge</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Anchor the known</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Clarify the cause</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Reset the model</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-pill">Next step</span>
+    </div>
+    <p class="completion-note">This is what a confident, accurate billing explanation sounds like.</p>
+  </div>
+
+  <div class="convo-footer">
+    <div class="progress-dots" id="progress-dots"></div>
+    <span class="step-counter" id="step-counter">Step 1 of 6</span>
+    <button class="next-btn" id="next-btn" onclick="advance()">Next</button>
+  </div>
+</div>
+
+<script>
+  var steps = [
+    {
+      type: 'pro',
+      parts: [{ text: '"I got a charge this morning but I already paid my Subscription at the start of the month. I don\'t understand why I\'m being charged again."', spotlight: false }],
+      panel: null
+    },
+    {
+      type: 'rep',
+      parts: [
+        { text: '"', spotlight: false },
+        { text: 'I completely understand why that would be confusing', spotlight: true },
+        { text: ' — it can look like a duplicate charge at first glance. Let me explain what\'s happening."', spotlight: false }
+      ],
+      panel: { tag: 'Acknowledge', text: 'The rep names the pro\'s experience specifically — not just \'I understand\' but why it\'s confusing.' }
+    },
+    {
+      type: 'rep',
+      parts: [
+        { text: '"Your Subscription payment at the start of the month ', spotlight: false },
+        { text: 'covers the leads you receive when homeowners select you — up to your monthly budget', spotlight: true },
+        { text: '."', spotlight: false }
+      ],
+      panel: { tag: 'Anchor the known', text: 'The rep establishes what the Subscription does cover before explaining what it does not.' }
+    },
+    {
+      type: 'rep',
+      parts: [
+        { text: '"This morning\'s charge is separate — it looks like you accepted a Boost. Boosts are individual leads you can choose to purchase on top of your Subscription, and they are ', spotlight: false },
+        { text: 'billed in real time when you accept them', spotlight: true },
+        { text: '."', spotlight: false }
+      ],
+      panel: { tag: 'Clarify the cause', text: 'The rep names the specific mechanic that caused the charge — real-time billing — clearly and without blame.' }
+    },
+    {
+      type: 'rep',
+      parts: [
+        { text: '"So you were not charged twice for the same thing — ', spotlight: false },
+        { text: 'Subscription leads and Boosts are billed differently, and each has its own separate billing process', spotlight: true },
+        { text: '."', spotlight: false }
+      ],
+      panel: { tag: 'Reset the mental model', text: 'The rep directly addresses the misunderstanding and replaces it with the accurate framing.' }
+    },
+    {
+      type: 'rep',
+      parts: [{ text: '"Does that make sense? I can pull up the specific Boost on your account if you would like to see the details."', spotlight: false }],
+      panel: { tag: 'Confirm and offer next step', text: 'The rep checks for understanding and moves toward resolution.' }
+    }
+  ];
+
+  var current = 0;
+  var total = steps.length;
+
+  var dotsEl = document.getElementById('progress-dots');
+  for (var i = 0; i < total; i++) {
+    var d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.id = 'dot-' + i;
+    dotsEl.appendChild(d);
+  }
+
+  function renderStep(index) {
+    var step = steps[index];
+    var body = document.getElementById('convo-body');
+
+    var row = document.createElement('div');
+    row.className = 'message-row ' + (step.type === 'pro' ? 'pro-row' : 'rep-row');
+
+    var avatar = document.createElement('div');
+    avatar.className = 'avatar ' + (step.type === 'pro' ? 'pro-avatar' : 'rep-avatar');
+    avatar.textContent = step.type === 'pro' ? 'Pro' : 'Rep';
+
+    var wrap = document.createElement('div');
+    wrap.className = 'bubble-wrap';
+
+    var label = document.createElement('div');
+    label.className = 'speaker-label';
+    label.textContent = step.type === 'pro' ? 'Pro' : 'Rep';
+
+    var bubble = document.createElement('div');
+    bubble.className = 'bubble ' + (step.type === 'pro' ? 'pro-bubble' : 'rep-bubble');
+
+    step.parts.forEach(function(part) {
+      if (part.spotlight) {
+        var span = document.createElement('span');
+        span.className = 'spotlight';
+        span.textContent = part.text;
+        bubble.appendChild(span);
+      } else {
+        bubble.appendChild(document.createTextNode(part.text));
+      }
+    });
+
+    wrap.appendChild(label);
+    wrap.appendChild(bubble);
+
+    if (step.panel) {
+      var panel = document.createElement('div');
+      panel.className = 'side-panel';
+      panel.id = 'panel-' + index;
+
+      var bar = document.createElement('div');
+      bar.className = 'side-panel-bar';
+
+      var content = document.createElement('div');
+      content.className = 'side-panel-content';
+
+      var tag = document.createElement('div');
+      tag.className = 'side-panel-tag';
+      tag.textContent = step.panel.tag;
+
+      var text = document.createElement('div');
+      text.className = 'side-panel-text';
+      text.textContent = step.panel.text;
+
+      content.appendChild(tag);
+      content.appendChild(text);
+      panel.appendChild(bar);
+      panel.appendChild(content);
+      wrap.appendChild(panel);
+
+      setTimeout(function(p) {
+        return function() { p.classList.add('visible'); };
+      }(panel), 400);
+    }
+
+    row.appendChild(avatar);
+    row.appendChild(wrap);
+    body.appendChild(row);
+
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { row.classList.add('visible'); });
+    });
+
+    row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function updateDots(index) {
+    for (var i = 0; i < total; i++) {
+      var d = document.getElementById('dot-' + i);
+      d.className = 'dot' + (i < index ? ' done' : i === index ? ' active' : '');
+    }
+  }
+
+  function advance() {
+    if (current >= total) return;
+
+    renderStep(current);
+    updateDots(current);
+    document.getElementById('step-counter').textContent = 'Step ' + (current + 1) + ' of ' + total;
+
+    current++;
+
+    if (current >= total) {
+      document.getElementById('next-btn').disabled = true;
+      setTimeout(function() {
+        var cc = document.getElementById('completion-card');
+        cc.classList.add('visible');
+        cc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 600);
+    }
+  }
+
+  advance();
+</script>
+
+</body>
+</html>

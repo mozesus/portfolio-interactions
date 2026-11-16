@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Fira Sans', Arial, sans-serif;
+      background: #FFFFFF;
+      min-height: 100vh;
+      padding: 48px 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container { max-width: 960px; width: 100%; }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #2D8CFF;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #24272B;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .scenario {
+      font-size: 17px;
+      color: #24272B;
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+
+    .instruction {
+      font-size: 17px;
+      font-weight: 700;
+      color: #24272B;
+      margin-bottom: 24px;
+    }
+
+    /* Card bank */
+    .card-bank {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .drag-card {
+      background: #F6EBFE;
+      border: 2px solid #DDE0E5;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 17px;
+      color: #24272B;
+      line-height: 1.55;
+      cursor: grab;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: box-shadow 0.2s, border-color 0.2s, opacity 0.2s;
+      user-select: none;
+    }
+
+    .drag-card:active { cursor: grabbing; }
+
+    .drag-card.dragging {
+      opacity: 0.4;
+    }
+
+    .drag-card .drag-handle {
+      font-size: 16px;
+      color: #9AA0A8;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    .drag-card:hover:not(.placed) {
+      border-color: #24272B;
+      box-shadow: 0 2px 10px rgba(36,39,43,0.12);
+    }
+
+    /* Drop zones */
+    .zones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .zone {
+      border-radius: 12px;
+      border: 2px dashed #C9CDD3;
+      background: #FFFFFF;
+      padding: 20px;
+      min-height: 180px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .zone.drag-over {
+      border-color: #2D8CFF;
+      background: #EAF3FF;
+    }
+
+    .zone-label {
+      font-size: 15px;
+      font-weight: 800;
+      color: #24272B;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #2D8CFF;
+    }
+
+    .zone-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 60px;
+    }
+
+    /* Placed cards */
+    .placed-card {
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #24272B;
+    }
+
+    .placed-card.correct {
+      background: #F6EBFE;
+      border: 2px solid #00A67E;
+    }
+
+    .placed-card.incorrect {
+      background: #FFF0F0;
+      border: 2px solid #B3261E;
+    }
+
+    .placed-card .result-icon {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .placed-card.correct .result-icon { color: #00A67E; }
+    .placed-card.incorrect .result-icon { color: #B3261E; }
+
+    .placed-card .card-quote {
+      font-size: 15px;
+      font-style: italic;
+      margin-bottom: 6px;
+      color: #24272B;
+    }
+
+    .placed-card .card-feedback {
+      font-size: 14px;
+      color: #43474E;
+      line-height: 1.55;
+    }
+
+    /* Reset */
+    .reset-btn {
+      margin-top: 24px;
+      background: #24272B;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-family: 'Fira Sans', Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: none;
+      transition: background 0.2s;
+    }
+    .reset-btn:hover { background: #2D8CFF; }
+    .reset-btn.visible { display: inline-block; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+
+  <!-- Card bank -->
+  <div class="card-bank" id="card-bank">
+    <div class="drag-card" draggable="true" data-id="1" data-correct="frantic">
+      <span class="drag-handle">⠿</span>
+      <span>"Oh wow, I am so sorry! I am looking as fast as I can, just give me one second to pull that up for you!"</span>
+    </div>
+    <div class="drag-card" draggable="true" data-id="2" data-correct="frantic">
+      <span class="drag-handle">⠿</span>
+      <span>"Wait, slow down! You're giving me too much information at once, and I can't keep up!"</span>
+    </div>
+    <div class="drag-card" draggable="true" data-id="3" data-correct="pace">
+      <span class="drag-handle">⠿</span>
+      <span>"I hear that there is a lot going on. [Pause] I am going to help you with all three of those items, starting with the booking location."</span>
+    </div>
+    <div class="drag-card" draggable="true" data-id="4" data-correct="pace">
+      <span class="drag-handle">⠿</span>
+      <span>"I've got you. [Pause] To make sure I get this right for our team, I'm going to address the pro's arrival first."</span>
+    </div>
+  </div>
+
+  <!-- Drop zones -->
+  <div class="zones">
+    <div class="zone" id="zone-frantic" data-zone="frantic">
+      <div class="zone-label">Matching the Customer's Frantic Pace</div>
+      <div class="zone-cards" id="cards-frantic"></div>
+    </div>
+    <div class="zone" id="zone-pace" data-zone="pace">
+      <div class="zone-label">Using Pace Control</div>
+      <div class="zone-cards" id="cards-pace"></div>
+    </div>
+  </div>
+
+  <button class="reset-btn" id="reset-btn" onclick="resetActivity()">Try Again</button>
+
+</div>
+
+<script>
+  const feedback = {
+    "1": { correct: false, text: "This matches the customer's frantic speed. Talking faster makes the customer feel like you are panicking with them." },
+    "2": { correct: false, text: "While the intent is to slow them down, this sounds dismissive and overwhelmed. It isn't leading—it's resisting." },
+    "3": { correct: true,  text: "This uses a steady tempo and an intentional pause to take control of the interaction." },
+    "4": { correct: true,  text: "This acknowledges the volume of information but anchors the speed of the call using a professional, calm tempo." }
+  };
+
+  const quotes = {
+    "1": '"Oh wow, I am so sorry! I am looking as fast as I can, just give me one second to pull that up for you!"',
+    "2": '"Wait, slow down! You\'re giving me too much information at once, and I can\'t keep up!"',
+    "3": '"I hear that there is a lot going on. [Pause] I am going to help you with all three of those items, starting with the booking location."',
+    "4": '"I\'ve got you. [Pause] To make sure I get this right for our team, I\'m going to address the pro\'s arrival first."'
+  };
+
+  let draggingId = null;
+  let placed = 0;
+  const total = 4;
+
+  document.querySelectorAll('.drag-card').forEach(card => {
+    card.addEventListener('dragstart', e => {
+      draggingId = card.dataset.id;
+      setTimeout(() => card.classList.add('dragging'), 0);
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+    });
+  });
+
+  document.querySelectorAll('.zone').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', () => {
+      zone.classList.remove('drag-over');
+    });
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      if (!draggingId) return;
+
+      const card = document.querySelector(`.drag-card[data-id="${draggingId}"]`);
+      if (!card || card.classList.contains('placed')) return;
+
+      const droppedZone = zone.dataset.zone;
+      const correctZone = card.dataset.correct;
+      const isCorrect = droppedZone === correctZone;
+      const fb = feedback[draggingId];
+
+      // Build placed card
+      const placed_card = document.createElement('div');
+      placed_card.className = `placed-card ${isCorrect ? 'correct' : 'incorrect'}`;
+      placed_card.innerHTML = `
+        <div class="result-icon">${isCorrect ? '✓ Correct' : '✗ Incorrect'}</div>
+        <div class="card-quote">${quotes[draggingId]}</div>
+        <div class="card-feedback">${fb.text}</div>
+      `;
+
+      zone.querySelector('.zone-cards').appendChild(placed_card);
+      card.classList.add('placed');
+      card.style.display = 'none';
+
+      placed++;
+      draggingId = null;
+
+      if (placed === total) {
+        document.getElementById('reset-btn').classList.add('visible');
+      }
+    });
+  });
+
+  function resetActivity() {
+    document.querySelectorAll('.drag-card').forEach(card => {
+      card.classList.remove('placed', 'dragging');
+      card.style.display = 'flex';
+    });
+    document.getElementById('cards-frantic').innerHTML = '';
+    document.getElementById('cards-pace').innerHTML = '';
+    document.getElementById('reset-btn').classList.remove('visible');
+    placed = 0;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Activity 6 — Apply the Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    background: #F6EBFE;
+    color: #24272B;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  .wrap { max-width: 680px; margin: 0 auto; }
+
+  .directions {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #24272B;
+    margin-bottom: 1.5rem;
+  }
+
+  .scenario-box {
+    background: #F2F4F7;
+    border-left: 4px solid #2D8CFF;
+    border-radius: 0 10px 10px 0;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .scenario-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #2D8CFF;
+    margin-bottom: 0.4rem;
+  }
+
+  .scenario-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.55;
+    color: #24272B;
+  }
+
+  .prompt {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #24272B;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .choice-btn {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #24272B;
+    background: #F2F4F7;
+    border: 2px solid #DDE0E5;
+    border-radius: 10px;
+    padding: 1rem 1.15rem;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    line-height: 1.5;
+  }
+
+  .choice-btn:hover { border-color: #2D8CFF; background: #fff; }
+  .choice-btn:active { transform: scale(0.99); }
+
+  .choice-label {
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #2D8CFF;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* OUTCOME PANELS */
+  .outcome {
+    display: none;
+    animation: fadeUp 0.25s ease;
+  }
+
+  .outcome.visible { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .convo-window {
+    border: 2.5px solid #24272B;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    background: #fff;
+  }
+
+  .convo-header {
+    background: #24272B;
+    padding: 0.75rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .convo-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #2D8CFF;
+  }
+
+  .convo-header-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.03em;
+  }
+
+  .convo-body {
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .message-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .pro-row { flex-direction: row; }
+  .rep-row { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .pro-avatar { background: #DDE0E5; color: #24272B; }
+  .rep-avatar { background: #2D8CFF; color: #fff; }
+
+  .bubble-wrap { display: flex; flex-direction: column; max-width: 75%; }
+  .rep-row .bubble-wrap { align-items: flex-end; }
+
+  .speaker { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #24272B; opacity: 0.4; margin-bottom: 3px; }
+
+  .bubble {
+    padding: 0.7rem 0.9rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #24272B;
+  }
+
+  .pro-bubble { background: #F2F4F7; border: 1.5px solid #DDE0E5; border-top-left-radius: 2px; }
+  .rep-bubble { background: #F6EBFE; border: 1.5px solid #E8CEFD; border-top-right-radius: 2px; }
+  .rep-bubble.wrong { background: #FFF0F0; border-color: #B3261E; }
+
+  .outcome-note {
+    border-radius: 10px;
+    padding: 1rem 1.15rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .outcome-note.correct { background: #F6EBFE; border-left: 4px solid #24272B; border-radius: 0 10px 10px 0; }
+  .outcome-note.incorrect { background: #FFF0F0; border-left: 4px solid #B3261E; border-radius: 0 10px 10px 0; }
+
+  .outcome-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+  }
+
+  .correct .outcome-tag { color: #24272B; }
+  .incorrect .outcome-tag { color: #B3261E; }
+
+  .try-again-btn {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #24272B;
+    background: #F2F4F7;
+    border: 2px solid #24272B;
+    border-radius: 8px;
+    padding: 0.6rem 1.4rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 0.25rem;
+  }
+
+  .try-again-btn:hover { background: #DDE0E5; }
+
+  .completion-card {
+    background: #24272B;
+    border-radius: 12px;
+    padding: 1.25rem;
+    color: #fff;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 0.5rem;
+  }
+
+  .completion-card strong { color: #E8CEFD; }
+
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 0.75rem;
+  }
+
+  .flow-pill {
+    background: #2D8CFF;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .flow-arrow { color: #E8CEFD; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p class="directions">Read the pro's statement below and choose what you would say first. Your choice determines how the conversation goes.</p>
+
+  <div class="scenario-box">
+    <div class="scenario-label">Pro says</div>
+    <div class="scenario-text">"I signed up because I was told I'd get a certain number of leads every month and that's not happening."</div>
+  </div>
+
+  <!-- CHOICES -->
+  <div id="choices-wrap">
+    <p class="prompt">What do you say first?</p>
+    <div class="choices">
+
+      <button class="choice-btn" onclick="choose('b')">
+        <span class="choice-label">Option A</span>
+        "I understand that's frustrating — a Subscription doesn't guarantee a specific number of leads, it locks in a discounted rate. Lead volume depends on homeowner demand in your area."
+      </button>
+
+      <button class="choice-btn" onclick="choose('a')">
+        <span class="choice-label">Option B</span>
+        "I hear you — that's genuinely frustrating, especially when you made a commitment based on what you expected to receive. I want to make sure I fully understand what's been happening."
+      </button>
+
+      <button class="choice-btn" onclick="choose('c')">
+        <span class="choice-label">Option C</span>
+        "Let me pull up your account right now and we can look at your tasks, ZIP codes, and lead settings to see if there's anything we can adjust."
+      </button>
+
+    </div>
+  </div>
+
+  <!-- PATH A — CORRECT -->
+  <div class="outcome" id="outcome-a">
+    <div class="convo-window">
+      <div class="convo-header"><div class="convo-dot"></div><span class="convo-header-label">How the call continues</span></div>
+      <div class="convo-body">
+        <div class="message-row pro-row">
+          <div class="avatar pro-avatar">Pro</div>
+          <div class="bubble-wrap"><div class="speaker">Pro</div>
+          <div class="bubble pro-bubble">"I signed up because I was told I'd get a certain number of leads every month and that's not happening."</div></div>
+        </div>
+        <div class="message-row rep-row">
+          <div class="avatar rep-avatar">Rep</div>
+          <div class="bubble-wrap"><div class="speaker">Rep</div>
+          <div class="bubble rep-bubble">"I hear you — that's genuinely frustrating, especially when you made a commitment based on what you expected to receive. I want to make sure I fully understand what's been happening."</div></div>
+        </div>
+        <div class="message-row pro-row">
+          <div class="avatar pro-avatar">Pro</div>
+          <div class="bubble-wrap"><div class="speaker">Pro</div>
+          <div class="bubble pro-bubble">"I've barely gotten any leads this month and my budget isn't even close to being used."</div></div>
+        </div>
+        <div class="message-row rep-row">
+          <div class="avatar rep-avatar">Rep</div>
+          <div class="bubble-wrap"><div class="speaker">Rep</div>
+          <div class="bubble rep-bubble">"That helps me understand. A Subscription locks in a discounted rate on leads — the commitment is to the monthly spend, not a guaranteed number of leads. Lead volume depends on homeowner demand in your area, which can vary by season. That said, your tasks, ZIP codes, and lead settings also directly affect how often you're presented to homeowners. Would it be okay if we took a look at those together right now?"</div></div>
+        </div>
+        <div class="message-row pro-row">
+          <div class="avatar pro-avatar">Pro</div>
+          <div class="bubble-wrap"><div class="speaker">Pro</div>
+          <div class="bubble pro-bubble">"Yeah, okay. That would help."</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="outcome-note correct">
+      <div class="outcome-tag">Correct — Acknowledge first</div>
+      The pro felt heard before receiving any information. That made them open to the explanation and willing to move forward. Leading with empathy is what kept this conversation on track.
+    </div>
+    <div class="completion-card">
+      <strong>The framework in action:</strong>
+      <div class="flow">
+        <span class="flow-pill">Acknowledge</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-pill">Clarify</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-pill">Reset</span>
+      </div>
+      <p style="margin-top: 0.75rem; color: #E8CEFD; font-size: 0.9rem;">The pro started frustrated and ended the conversation ready to work through the problem together.</p>
+    </div>
+  </div>
+
+  <!-- PATH B — CLARIFY FIRST -->
+  <div class="outcome" id="outcome-b">
+    <div class="convo-window">
+      <div class="convo-header"><div class="convo-dot"></div><span class="convo-header-label">How the call continues</span></div>
+      <div class="convo-body">
+        <div class="message-row pro-row">
+          <div class="avatar pro-avatar">Pro</div>
+          <div class="bubble-wrap"><div class="speaker">Pro</div>
+          <div class="bubble pro-bubble">"I signed up because I was told I'd get a certain number of leads every month and that's not happening."</div></div>
+        </div>
+        <div class="message-row rep-row">
+          <div class="avatar rep-avatar">Rep</div>
+          <div class="bubble-wrap"><div class="speaker">Rep</div>
+          <div class="bubble rep-bubble wrong">"I understand that's frustrating — a Subscription doesn't guarantee a specific number of leads, it locks in a discounted rate. Lead volume depends on homeowner demand in your area."</div></div>
+        </div>
+        <div class="message-row pro-row">
+          <div class="avatar pro-avatar">Pro</div>
+          <div class="bubble-wrap"><div class="speaker">Pro</div>
+          <div class="bubble pro-bubble">"That's not what I was told when I signed up. I feel like I was misled. I want to cancel."</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="outcome-note incorrect">
+      <div class="outcome-tag">Not quite — Clarify came too soon</div>
+      Jumping straight to the explanation felt dismissive. The pro hadn't felt heard yet, so the accurate information landed as an argument rather than a helpful answer. Always Acknowledge before you Clarify.
+    </div>
+    <button class="try-again-btn" onclick="tryAgain()">Try again</button>
+  </div>
+
+  <!-- PATH C — RESET FIRST -->
+  <div class="outcome" id="outcome-c">
+    <div class="convo-window">
+      <div class="convo-header"><div class="convo-dot"></div><span class="convo-header-label">How the call continues</span></div>
+      <div class="convo-body">
+        <div class="message-row pro-row">
+          <div class="avatar pro-avatar">Pro</div>
+          <div class="bubble-wrap"><div class="speaker">Pro</div>
+          <div class="bubble pro-bubble">"I signed up because I was told I'd get a certain number of leads every month and that's not happening."</div></div>
+        </div>
+        <div class="message-row rep-row">
+          <div class="avatar rep-avatar">Rep</div>
+          <div class="bubble-wrap"><div class="speaker">Rep</div>
+          <div class="bubble rep-bubble wrong">"Let me pull up your account right now and we can look at your tasks, ZIP codes, and lead settings to see if there's anything we can adjust."</div></div>
+        </div>
+        <div class="message-row pro-row">
+          <div class="avatar pro-avatar">Pro</div>
+          <div class="bubble-wrap"><div class="speaker">Pro</div>
+          <div class="bubble pro-bubble">"I don't want to review my settings. I want the leads I was promised. Can you just tell me why I'm not getting them?"</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="outcome-note incorrect">
+      <div class="outcome-tag">Not quite — Reset came too soon</div>
+      Jumping to a solution before the pro felt heard or understood the issue caused them to push back. The pro still had a misconception about guaranteed leads that needed to be addressed first. Acknowledge and Clarify before you Reset.
+    </div>
+    <button class="try-again-btn" onclick="tryAgain()">Try again</button>
+  </div>
+
+</div>
+
+<script>
+  function choose(path) {
+    document.getElementById('choices-wrap').style.display = 'none';
+    document.getElementById('outcome-' + path).classList.add('visible');
+  }
+
+  function tryAgain() {
+    document.getElementById('outcome-b').classList.remove('visible');
+    document.getElementById('outcome-c').classList.remove('visible');
+    document.getElementById('choices-wrap').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>

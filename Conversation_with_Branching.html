@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice: Walking Pros Through Navigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F6EBFE;
+            padding: 20px;
+            color: #24272B;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #2D8CFF;
+            color: white;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .chat-messages {
+            padding: 25px;
+            min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        /* Message Bubbles */
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .message.pro .message-avatar {
+            background-color: #DDE0E5;
+            color: #24272B;
+        }
+
+        .message.rep .message-avatar {
+            background-color: #F6EBFE;
+            color: #24272B;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-bubble {
+            padding: 15px 18px;
+            border-radius: 12px;
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 85%;
+        }
+
+        .message.pro .message-bubble {
+            background-color: #F2F4F7;
+            color: #24272B;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.rep .message-bubble {
+            background-color: #F6EBFE;
+            color: #24272B;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #5B5F66;
+            margin-bottom: 4px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            padding: 20px 25px;
+            border-top: 2px solid #F2F4F7;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background-color: #2D8CFF;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Fira Sans', sans-serif;
+        }
+
+        .action-btn:hover {
+            background-color: #13297A;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(45, 140, 255, 0.2);
+        }
+
+        .action-btn.secondary {
+            background-color: #F2F4F7;
+            color: #24272B;
+        }
+
+        .action-btn.secondary:hover {
+            background-color: #DDE0E5;
+        }
+
+        /* Completion Screen */
+        .completion-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .completion-overlay.active {
+            display: flex;
+        }
+
+        .completion-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .completion-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #F6EBFE;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .completion-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: #24272B;
+        }
+
+        .completion-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #24272B;
+            margin-bottom: 15px;
+        }
+
+        .completion-message {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #24272B;
+            margin-bottom: 25px;
+        }
+
+        .completion-btn {
+            background-color: #2D8CFF;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Fira Sans', sans-serif;
+        }
+
+        .completion-btn:hover {
+            background-color: #13297A;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .chat-header {
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .chat-messages {
+                padding: 20px;
+            }
+
+            .message-bubble {
+                font-size: 14px;
+                max-width: 90%;
+            }
+
+            .action-buttons {
+                padding: 15px;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+
+            .completion-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Chat Interface -->
+        <div class="chat-container">
+            <div class="chat-header">Practice: Walking Pros Through Navigation</div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here by JavaScript -->
+            </div>
+            
+            <div class="action-buttons" id="actionButtons">
+                <!-- Action buttons will be added here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Overlay -->
+    <div class="completion-overlay" id="completionOverlay">
+        <div class="completion-card">
+            <div class="completion-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                </svg>
+            </div>
+            <div class="completion-title">Great Work!</div>
+            <div class="completion-message">You successfully walked the pro through finding their Boosts tab. You're ready to guide pros through navigation with confidence.</div>
+            <button class="completion-btn" onclick="restartSimulation()">Practice Again</button>
+        </div>
+    </div>
+
+    <script>
+        const conversationFlow = {
+            start: {
+                messages: [
+                    { type: 'pro', text: "Hi, I'm trying to find the Boosts tab, but I'm not sure where to click. Can you help me?" }
+                ],
+                actions: [
+                    { text: "Guide them step-by-step", next: 'step1' }
+                ]
+            },
+            step1: {
+                messages: [
+                    { type: 'rep', text: "Of course! Let me walk you through it. First, open the Lead Source Pro app or go to pro.leadsource.com and log in." }
+                ],
+                actions: [
+                    { text: "Continue to next step", next: 'step2' }
+                ]
+            },
+            step2: {
+                messages: [
+                    { type: 'pro', text: "Okay, I'm logged in." },
+                    { type: 'rep', text: "Great! Now look at the navigation tabs. If you're on the web, they're at the top of your screen. If you're on the app, they're at the bottom. You should see Leads, Boosts, Reviews, and My Business." }
+                ],
+                actions: [
+                    { text: "Continue to next step", next: 'step3' }
+                ]
+            },
+            step3: {
+                messages: [
+                    { type: 'pro', text: "I see those tabs!" },
+                    { type: 'rep', text: "Perfect! Now tap or click on 'Boosts.'" }
+                ],
+                actions: [],
+                autoRoute: true // Signal to handle routing based on completed pathways
+            },
+            step4: {
+                messages: [
+                    { type: 'pro', text: "I clicked it and something popped up!" },
+                    { type: 'rep', text: "That's the first-time message! It explains how Boosts work. You can tap 'Done' to close it or read through the details if you'd like." }
+                ],
+                actions: [
+                    { text: "Continue to next step", next: 'step5' }
+                ]
+            },
+            step5: {
+                messages: [
+                    { type: 'pro', text: "Got it. I closed that message." },
+                    { type: 'rep', text: "Excellent! Now you should see any available Boosts, or you might see a message explaining why the tab is empty." }
+                ],
+                actions: [
+                    { text: "Pro understands", next: 'complete' }
+                ]
+            },
+            blankTab: {
+                messages: [
+                    { type: 'pro', text: "Hmm, the tab is completely blank. There's no message or anything - just a blank screen. Is something wrong?" },
+                    { type: 'rep', text: "Let me check your account to see what might be going on." }
+                ],
+                actions: [
+                    { text: "Check payment method", next: 'checkACH' }
+                ]
+            },
+            checkACH: {
+                messages: [
+                    { type: 'rep', text: "I see you currently have ACH set as your primary payment method. Boosts require a credit card as your primary payment method. Once you add a credit card, you'll be able to see and accept Boosts in that tab." }
+                ],
+                actions: [
+                    { text: "Continue", next: 'achComplete' }
+                ]
+            },
+            achComplete: {
+                messages: [
+                    { type: 'pro', text: "Thank you! If I do change my payment method, how soon can I see Boosts?" },
+                    { type: 'rep', text: "It typically takes 48 hours after updating your primary payment method for Boosts to have the potential to populate in that tab." }
+                ],
+                actions: [
+                    { text: "Pro understands", next: 'complete' }
+                ]
+            },
+            complete: {
+                messages: [
+                    { type: 'pro', text: "Thank you so much! That was really helpful." },
+                    { type: 'rep', text: "You're welcome!" }
+                ],
+                actions: [
+                    { text: "Complete pathway", next: 'checkCompletion' }
+                ]
+            }
+        };
+
+        let currentStep = 'start';
+        let messageDelay = 800;
+        let completedPathways = {
+            standard: false,
+            achScenario: false
+        };
+        let currentPathway = null;
+
+        function addMessage(type, text, delay = 0) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const messagesContainer = document.getElementById('chatMessages');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${type}`;
+                    
+                    messageDiv.innerHTML = `
+                        <div class="message-avatar">${type === 'pro' ? 'P' : 'R'}</div>
+                        <div class="message-content">
+                            <div class="message-label">${type === 'pro' ? 'Pro' : 'You (Rep)'}</div>
+                            <div class="message-bubble">${text}</div>
+                        </div>
+                    `;
+                    
+                    messagesContainer.appendChild(messageDiv);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    
+                    setTimeout(resolve, 400);
+                }, delay);
+            });
+        }
+
+        function showActions(actions) {
+            const actionsContainer = document.getElementById('actionButtons');
+            actionsContainer.innerHTML = '';
+            
+            actions.forEach(action => {
+                const button = document.createElement('button');
+                button.className = 'action-btn';
+                button.textContent = action.text;
+                button.onclick = () => {
+                    if (action.pathway) {
+                        currentPathway = action.pathway;
+                    }
+                    handleAction(action.next);
+                };
+                actionsContainer.appendChild(button);
+            });
+        }
+
+        async function handleAction(nextStep) {
+            // Clear actions
+            document.getElementById('actionButtons').innerHTML = '';
+            
+            if (nextStep === 'checkCompletion') {
+                if (currentPathway) {
+                    completedPathways[currentPathway] = true;
+                }
+                
+                // Check if both pathways are complete
+                if (completedPathways.standard && completedPathways.achScenario) {
+                    showCompletion();
+                } else {
+                    showPartialCompletion();
+                }
+                return;
+            }
+            
+            currentStep = nextStep;
+            const step = conversationFlow[nextStep];
+            
+            // Add messages with delays
+            for (let i = 0; i < step.messages.length; i++) {
+                await addMessage(step.messages[i].type, step.messages[i].text, i === 0 ? 0 : messageDelay);
+            }
+            
+            // Check for auto-routing at step3
+            if (step.autoRoute) {
+                // Automatically route based on which pathway is incomplete
+                if (completedPathways.standard && !completedPathways.achScenario) {
+                    // Standard is done, route to ACH scenario
+                    currentPathway = 'achScenario';
+                    showActions([{ text: "Continue", next: 'blankTab' }]);
+                } else if (completedPathways.achScenario && !completedPathways.standard) {
+                    // ACH is done, route to standard scenario
+                    currentPathway = 'standard';
+                    showActions([{ text: "Continue", next: 'step4' }]);
+                } else {
+                    // Neither completed yet (first time through), show both options
+                    showActions([
+                        { text: "Pro sees first-time message", next: 'step4', pathway: 'standard' },
+                        { text: "Tab is completely blank", next: 'blankTab', pathway: 'achScenario' }
+                    ]);
+                }
+            } else {
+                // Show action buttons normally
+                showActions(step.actions);
+            }
+        }
+
+        function showPartialCompletion() {
+            const remainingScenario = completedPathways.standard 
+                ? "the ACH troubleshooting scenario" 
+                : "the standard navigation pathway";
+            
+            document.getElementById('completionOverlay').innerHTML = `
+                <div class="completion-card">
+                    <div class="completion-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <div class="completion-title">Pathway Complete!</div>
+                    <div class="completion-message">Great work! You've completed one scenario. Now let's practice ${remainingScenario} to ensure you're ready for both situations.</div>
+                    <button class="completion-btn" onclick="startOtherPathway()">Continue to Next Scenario</button>
+                </div>
+            `;
+            document.getElementById('completionOverlay').classList.add('active');
+        }
+
+        function showCompletion() {
+            document.getElementById('completionOverlay').innerHTML = `
+                <div class="completion-card">
+                    <div class="completion-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                        </svg>
+                    </div>
+                    <div class="completion-title">Both Pathways Complete!</div>
+                    <div class="completion-message">Excellent! You've successfully practiced both scenarios: walking a pro through navigation, and troubleshooting when the Boosts tab is completely blank due to ACH payment method. You're ready to guide pros through navigation with confidence.</div>
+                    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap;">
+                        <button class="completion-btn" style="background-color: #F2F4F7; color: #24272B;" onclick="restartSimulation()">Review Pathways</button>
+                        <button class="completion-btn" onclick="closeSimulation()">Continue</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('completionOverlay').classList.add('active');
+        }
+
+        function closeSimulation() {
+            document.getElementById('completionOverlay').classList.remove('active');
+            const container = document.querySelector('.chat-container');
+            const finalMessage = document.createElement('div');
+            finalMessage.style.cssText = 'text-align: center; padding: 40px 20px; background-color: #F6EBFE; border-radius: 12px; margin-top: 20px;';
+            finalMessage.innerHTML = `
+                <div style="font-size: 20px; font-weight: 700; color: #24272B; margin-bottom: 10px;">Practice Complete!</div>
+                <div style="font-size: 16px; color: #24272B;">You can now continue with the course.</div>
+            `;
+            container.parentElement.appendChild(finalMessage);
+        }
+
+        function startOtherPathway() {
+            currentPathway = null;
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = '';
+            document.getElementById('actionButtons').innerHTML = '';
+            document.getElementById('completionOverlay').classList.remove('active');
+            
+            // Add transition message for learner
+            const transitionDiv = document.createElement('div');
+            transitionDiv.style.cssText = 'background-color: #F7F8FA; border-left: 4px solid #2D8CFF; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 15px; line-height: 1.5; color: #24272B;';
+            transitionDiv.innerHTML = '<strong>New Scenario:</strong> You have another pro on the line who needs help with the Boosts tab.';
+            messagesContainer.appendChild(transitionDiv);
+            
+            currentStep = 'start';
+            initializeSimulation();
+        }
+
+        async function initializeSimulation() {
+            const step = conversationFlow[currentStep];
+            
+            // Add initial messages
+            for (let i = 0; i < step.messages.length; i++) {
+                await addMessage(step.messages[i].type, step.messages[i].text, i * messageDelay);
+            }
+            
+            // Show initial actions
+            showActions(step.actions);
+        }
+
+        function restartSimulation() {
+            currentStep = 'start';
+            currentPathway = null;
+            completedPathways = {
+                standard: false,
+                achScenario: false
+            };
+            document.getElementById('chatMessages').innerHTML = '';
+            document.getElementById('actionButtons').innerHTML = '';
+            document.getElementById('completionOverlay').classList.remove('active');
+            initializeSimulation();
+        }
+
+        // Initialize
+        initializeSimulation();
+    </script>
+</body>
+</html>

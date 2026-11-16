@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Activity 4 — How Would You Explain It?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    background: #fff;
+    color: #24272B;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  .wrap { max-width: 680px; margin: 0 auto; }
+
+  .scenario-box {
+    background: #F2F4F7;
+    border-left: 4px solid #2D8CFF;
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .scenario-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #2D8CFF;
+    margin-bottom: 0.4rem;
+  }
+
+  .scenario-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.55;
+    color: #24272B;
+  }
+
+  .prompt-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #24272B;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .prompt-sub {
+    font-size: 0.88rem;
+    color: #5B5F66;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 130px;
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #24272B;
+    background: #fff;
+    border: 2px solid #DDE0E5;
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    resize: vertical;
+    transition: border-color 0.2s;
+    display: block;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: #24272B;
+  }
+
+  textarea:disabled {
+    background: #F2F4F7;
+    color: #5B5F66;
+  }
+
+  .submit-btn {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: #DDE0E5;
+    border: none;
+    border-radius: 8px;
+    padding: 0.65rem 1.5rem;
+    margin-top: 0.85rem;
+    cursor: not-allowed;
+    transition: background 0.2s, transform 0.1s, color 0.2s;
+  }
+
+  .submit-btn:not(:disabled) {
+    background: #2D8CFF;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .submit-btn:not(:disabled):hover { background: #13297A; }
+  .submit-btn:not(:disabled):active { transform: scale(0.97); }
+  .submit-btn:disabled { color: #9AA0A8; }
+
+  .model-section {
+    display: none;
+    margin-top: 1.75rem;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .model-section.visible { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .divider {
+    height: 1.5px;
+    background: #DDE0E5;
+    margin-bottom: 1.75rem;
+  }
+
+  .model-header {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #2D8CFF;
+    margin-bottom: 0.6rem;
+  }
+
+  .model-intro {
+    font-size: 0.95rem;
+    color: #5B5F66;
+    margin-bottom: 1rem;
+    line-height: 1.55;
+  }
+
+  .model-bubble {
+    background: #F6EBFE;
+    border: 1.5px solid #E8CEFD;
+    border-radius: 12px;
+    border-top-right-radius: 2px;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: #24272B;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .model-bubble-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #5B5F66;
+    opacity: 0.6;
+    margin-bottom: 6px;
+  }
+
+  .highlight {
+    background: #E8CEFD;
+    border-radius: 3px;
+    padding: 1px 3px;
+    font-weight: 600;
+  }
+
+  .checklist-header {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #24272B;
+    margin-bottom: 0.85rem;
+  }
+
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .check-box {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #DDE0E5;
+    border-radius: 5px;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, background 0.2s;
+    margin-top: 1px;
+  }
+
+  .check-box.checked {
+    background: #24272B;
+    border-color: #24272B;
+  }
+
+  .check-box svg {
+    width: 12px;
+    height: 12px;
+    fill: #E8CEFD;
+    display: none;
+  }
+
+  .check-box.checked svg { display: block; }
+
+  .check-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #24272B;
+  }
+
+  .check-tag {
+    font-weight: 700;
+    color: #24272B;
+  }
+
+  .completion-note {
+    display: none;
+    background: #24272B;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #fff;
+    animation: fadeUp 0.25s ease;
+  }
+
+  .completion-note.visible { display: block; }
+  .completion-note strong { color: #E8CEFD; }
+
+  .done-btn {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    background: #24272B;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.5rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 1rem;
+  }
+
+  .done-btn:hover { background: #2D8CFF; }
+
+  .completion-note.incomplete {
+    background: #EAF3FF;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #24272B;
+  }
+
+  .completion-note.incomplete strong { color: #13297A; }
+
+  .reset-btn {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    background: #2D8CFF;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.5rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    display: none;
+  }
+
+  .reset-btn.visible { display: inline-block; }
+  .reset-btn:hover { background: #13297A; }
+  .reset-btn:active { transform: scale(0.97); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 1.25rem; color: #24272B;">Read the scenario below and write your response as if you are on the call. When you are ready, select <strong>Submit</strong> to see a model response. Then compare your response to the model and check off each element you included.</p>
+
+  <div class="scenario-box">
+    <div class="scenario-label">Scenario</div>
+    <div class="scenario-text">"I just got charged for a lead but I still have budget left this month. What happened?"</div>
+  </div>
+
+  <div class="prompt-label">In your own words, how would you explain this charge to the pro?</div>
+  <p class="prompt-sub">Write your response as if you are speaking directly to the pro.</p>
+
+  <textarea id="response-box" placeholder="Type your response here..." oninput="checkInput()"></textarea>
+  <button class="submit-btn" id="submit-btn" onclick="submit()" disabled>Submit</button>
+
+  <div class="model-section" id="model-section">
+    <div class="divider"></div>
+
+    <div class="model-header">Model response</div>
+    <p class="model-intro">Here is an example of a clear, accurate explanation. Key elements are highlighted.</p>
+
+    <div class="model-bubble">
+      <div class="model-bubble-label">Rep</div>
+      "I completely understand why that would be confusing. <span class="highlight">This charge is for a Boost — a separate type of lead that is billed differently from your Subscription.</span> Your monthly Subscription payment covers the leads you receive when homeowners select you up to your budget. <span class="highlight">Boosts are billed in real time when you accept them — they are not covered by your pre-paid Subscription budget.</span> <span class="highlight">The Subscription discount also does not apply to Boosts</span>, so they are priced separately. Would you like me to pull up the specific Boost on your account so I can walk you through it?"
+    </div>
+
+    <div class="checklist-header">Compare your response to the model above. Check off each element you included in your own response.</div>
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-box" id="check-0" onclick="toggleCheck(0)">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        </div>
+        <div class="check-text"><span class="check-tag">The charge is for a Boost</span> — not a duplicate or error.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" id="check-1" onclick="toggleCheck(1)">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        </div>
+        <div class="check-text"><span class="check-tag">Boosts are billed separately in real time</span> — they are not covered by the pre-paid Subscription budget.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-box" id="check-2" onclick="toggleCheck(2)">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        </div>
+        <div class="check-text"><span class="check-tag">The Subscription discount does not apply</span> to Boosts.</div>
+      </div>
+    </div>
+
+    <button class="done-btn" id="done-btn" onclick="finishCheck()" style="display:none;">Done</button>
+
+    <div class="completion-note" id="completion-note">
+      <strong>Nice work.</strong> Those are the three things a pro needs to hear to understand this charge. The goal is not a perfect script — it is making sure every explanation covers all three points clearly and without blame.
+    </div>
+
+    <div class="completion-note incomplete" id="incomplete-note">
+      <strong>Almost there.</strong> Your response was missing one or more key elements. Take a moment to review the highlighted elements in the model above before moving on.
+    </div>
+
+    <button class="reset-btn" id="reset-btn" onclick="reset()">Try again</button>
+  </div>
+
+</div>
+
+<script>
+  var checked = [false, false, false];
+
+  function checkInput() {
+    var val = document.getElementById('response-box').value.trim();
+    document.getElementById('submit-btn').disabled = val.split(/\s+/).filter(Boolean).length < 5;
+  }
+
+  function submit() {
+    var val = document.getElementById('response-box').value.trim();
+    if (!val) return;
+    document.getElementById('response-box').disabled = true;
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('model-section').classList.add('visible');
+    document.getElementById('model-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function toggleCheck(index) {
+    checked[index] = !checked[index];
+    var box = document.getElementById('check-' + index);
+    box.classList.toggle('checked', checked[index]);
+    var anyChecked = checked[0] || checked[1] || checked[2];
+    var doneBtn = document.getElementById('done-btn');
+    doneBtn.style.display = anyChecked ? 'inline-block' : 'none';
+    document.getElementById('completion-note').classList.remove('visible');
+    document.getElementById('incomplete-note').classList.remove('visible');
+    document.getElementById('reset-btn').classList.remove('visible');
+  }
+
+  function finishCheck() {
+    var allChecked = checked[0] && checked[1] && checked[2];
+    var note = document.getElementById(allChecked ? 'completion-note' : 'incomplete-note');
+    document.getElementById('completion-note').classList.remove('visible');
+    document.getElementById('incomplete-note').classList.remove('visible');
+    note.classList.add('visible');
+    document.getElementById('reset-btn').classList.toggle('visible', allChecked);
+    document.getElementById('done-btn').style.display = 'none';
+    note.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function reset() {
+    document.getElementById('response-box').value = '';
+    document.getElementById('response-box').disabled = false;
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('model-section').classList.remove('visible');
+    document.getElementById('completion-note').classList.remove('visible');
+    document.getElementById('incomplete-note').classList.remove('visible');
+    document.getElementById('reset-btn').classList.remove('visible');
+    document.getElementById('done-btn').style.display = 'none';
+    checked = [false, false, false];
+    for (var i = 0; i < 3; i++) {
+      document.getElementById('check-' + i).classList.remove('checked');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>

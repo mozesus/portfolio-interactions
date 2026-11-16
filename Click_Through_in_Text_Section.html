@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Narrate or pause briefly — preview</title>
+<style>
+  body {
+    margin: 0;
+    padding: 48px 20px;
+    background: #F2F4F7;
+    display: flex;
+    justify-content: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="leadsource-np" id="leadSourceNp">
+
+  <span class="leadsource-np__label">Narrate or pause briefly</span>
+  <p class="leadsource-np__lead">While you're searching for an answer, keep the pro in the loop. Narrating briefly is almost always the better choice. Only pause if the lookup will take longer, or if you're looking at something you can't say out loud.</p>
+
+  <div class="leadsource-np__grid">
+    <div class="leadsource-np__card">
+      <div class="leadsource-np__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#24272B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <h4 class="leadsource-np__cardTitle">Narrate briefly</h4>
+      <p class="leadsource-np__cardText">When the lookup will only take a few seconds.</p>
+      <div class="leadsource-np__quote">"One moment, I'm just confirming that for you."</div>
+    </div>
+
+    <div class="leadsource-np__card">
+      <div class="leadsource-np__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#24272B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="4" width="4" height="16" rx="1"/>
+          <rect x="14" y="4" width="4" height="16" rx="1"/>
+        </svg>
+      </div>
+      <h4 class="leadsource-np__cardTitle">Pause for a brief moment of silence</h4>
+      <p class="leadsource-np__cardText">Take a brief moment of silence if the search will take longer, or if you're viewing something you can't say out loud.</p>
+      <div class="leadsource-np__quote">"There is going to be a brief moment of silence while I look into this for you, but I'm still here in case you need anything."</div>
+    </div>
+  </div>
+
+  <span class="leadsource-np__label leadsource-np__label--spaced">During a longer pause</span>
+  <p class="leadsource-np__lead">Check back in every 30 to 45 seconds. A quick check-in lets the pro know you haven't disappeared, even if you don't have an answer yet.</p>
+
+  <div class="leadsource-np__mainQuote">
+    <div class="leadsource-np__icon leadsource-np__icon--sm" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#24272B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 6v6l4 2"/>
+      </svg>
+    </div>
+    <p class="leadsource-np__mainQuoteText">"Still here with you, [name], and working on this for you."</p>
+  </div>
+
+  <div class="leadsource-np__rotator">
+    <span class="leadsource-np__rotatorLabel">Other ways to phrase it</span>
+    <div class="leadsource-np__rotatorCard">
+      <p class="leadsource-np__rotatorText" id="leadSourceNpRotatorText" aria-live="polite"></p>
+      <div class="leadsource-np__rotatorRow">
+        <span class="leadsource-np__rotatorCount" id="leadSourceNpRotatorCount"></span>
+        <div class="leadsource-np__rotatorBtns">
+          <button type="button" class="leadsource-np__rotatorBtn leadsource-np__rotatorBtn--secondary" id="leadSourceNpRotatorBack">Back</button>
+          <button type="button" class="leadsource-np__rotatorBtn" id="leadSourceNpRotatorNext">Next phrase</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  #leadSourceNp, #leadSourceNp * { box-sizing: border-box; }
+  .leadsource-np {
+    --charcoal: #24272B;
+    --charcoal-100: #F2F4F7;
+    --snow: #FFFFFF;
+    --spring-100: #F6EBFE;
+    --spring-200: #E8CEFD;
+    --btn-primary: #2D8CFF;
+    --btn-primary-press: #13297A;
+    --focus: #2D8CFF;
+    font-family: "National 2", "Fira Sans", -apple-system, "Segoe UI", Arial, sans-serif;
+    color: var(--charcoal);
+    max-width: 680px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .leadsource-np__label {
+    display: block;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--charcoal); margin-bottom: 10px;
+  }
+  .leadsource-np__label--spaced { margin-top: 32px; }
+
+  .leadsource-np__lead { font-size: 17px; line-height: 1.6; color: var(--charcoal); margin: 0 0 20px; }
+
+  .leadsource-np__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .leadsource-np__card {
+    background: var(--snow);
+    border: 1.5px solid var(--charcoal);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .leadsource-np__icon {
+    width: 40px; height: 40px;
+    border-radius: 999px;
+    background: var(--spring-200);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+  }
+  .leadsource-np__icon svg { width: 20px; height: 20px; }
+  .leadsource-np__icon--sm { width: 36px; height: 36px; margin-bottom: 0; }
+  .leadsource-np__icon--sm svg { width: 18px; height: 18px; }
+
+  .leadsource-np__cardTitle { font-size: 17px; font-weight: 700; line-height: 1.35; margin: 0 0 8px; }
+  .leadsource-np__cardText { font-size: 17px; line-height: 1.6; color: var(--charcoal); margin: 0 0 14px; }
+
+  .leadsource-np__quote {
+    background: var(--charcoal-100);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 17px; line-height: 1.5;
+    font-style: italic;
+  }
+
+  .leadsource-np__mainQuote {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--spring-100);
+    border: 1.5px solid var(--charcoal);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+  }
+  .leadsource-np__mainQuoteText {
+    font-size: 17px; line-height: 1.6; font-style: italic; font-weight: 500;
+    color: var(--charcoal); margin: 0;
+  }
+
+  .leadsource-np__rotatorLabel {
+    display: block;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--charcoal); margin-bottom: 10px;
+  }
+
+  .leadsource-np__rotatorCard {
+    background: var(--snow);
+    border: 1.5px solid var(--charcoal);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .leadsource-np__rotatorText {
+    font-size: 17px; line-height: 1.6; font-style: italic;
+    color: var(--charcoal); margin: 0 0 16px;
+    min-height: 52px;
+  }
+  .leadsource-np__rotatorRow {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .leadsource-np__rotatorCount { font-size: 14px; font-weight: 700; color: var(--charcoal); }
+  .leadsource-np__rotatorBtns { display: flex; gap: 10px; }
+
+  .leadsource-np__rotatorBtn {
+    font-family: inherit;
+    background: var(--btn-primary);
+    color: var(--snow);
+    border: 2px solid var(--btn-primary);
+    border-radius: 999px;
+    padding: 10px 20px;
+    min-height: 44px;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer;
+  }
+  .leadsource-np__rotatorBtn:hover { background: var(--btn-primary-press); border-color: var(--btn-primary-press); }
+  .leadsource-np__rotatorBtn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .leadsource-np__rotatorBtn[hidden] { display: none; }
+
+  .leadsource-np__rotatorBtn--secondary {
+    background: var(--snow);
+    color: var(--charcoal);
+    border: 2px solid var(--charcoal);
+  }
+  .leadsource-np__rotatorBtn--secondary:hover { background: var(--spring-100); }
+
+  @media (max-width: 640px) {
+    .leadsource-np__grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+(function () {
+  var phrases = [
+    "I'm pulling up the exact details right now so we can get this taken care of correctly for you.",
+    "I'm reviewing the steps for this right now to make sure we handle this right the first time.",
+    "I'm double-checking the process on my end so I can give you the most accurate solution."
+  ];
+  var index = 0;
+
+  var textEl = document.getElementById("leadSourceNpRotatorText");
+  var countEl = document.getElementById("leadSourceNpRotatorCount");
+  var backBtn = document.getElementById("leadSourceNpRotatorBack");
+  var nextBtn = document.getElementById("leadSourceNpRotatorNext");
+
+  function render() {
+    textEl.textContent = '"' + phrases[index] + '"';
+    countEl.textContent = (index + 1) + " of " + phrases.length;
+    backBtn.hidden = index === 0;
+    nextBtn.hidden = index === phrases.length - 1;
+  }
+
+  backBtn.addEventListener("click", function () {
+    if (index > 0) { index--; render(); }
+  });
+
+  nextBtn.addEventListener("click", function () {
+    if (index < phrases.length - 1) { index++; render(); }
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>

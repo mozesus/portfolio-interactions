@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Forecasting and Pacing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    background: #F6EBFE;
+    color: #24272B;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  .intro {
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .wrapper { max-width: 700px; margin: 0 auto; }
+
+  /* DEFINITIONS */
+  .def-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .def-card {
+    flex: 1 1 180px;
+    border: 2px solid #DDE0E5;
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    background: #fff;
+  }
+
+  .def-card:hover { border-color: #2D8CFF; }
+  .def-card.open { border-color: #24272B; background: #fff; }
+
+  .def-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #2D8CFF;
+    margin-bottom: 0.3rem;
+  }
+
+  .def-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #24272B;
+    margin-bottom: 0;
+  }
+
+  .def-body {
+    display: none;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #24272B;
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1.5px solid #DDE0E5;
+  }
+
+  .def-hint {
+    font-size: 0.75rem;
+    color: #9AA0A8;
+    margin-top: 0.4rem;
+    font-style: italic;
+  }
+
+  .def-card.viewed {
+    border-color: #24272B;
+  }
+
+  .def-check {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 22px;
+    height: 22px;
+    background: #24272B;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .def-card.viewed .def-check { display: flex; }
+
+  .def-check svg { width: 12px; height: 12px; fill: #E8CEFD; }
+
+  .def-card.open .def-hint { display: none; }
+  .def-card.open .def-body { display: block; }
+
+  /* SIMULATOR */
+  .sim-box {
+    border: 2.5px solid #24272B;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .sim-header {
+    background: #24272B;
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .sim-header-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .toggle-group {
+    display: flex;
+    border: 2px solid #2D8CFF;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .toggle-btn {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.4rem 0.85rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    background: transparent;
+    color: #fff;
+  }
+
+  .toggle-btn.active {
+    background: #2D8CFF;
+    color: #fff;
+  }
+
+  .toggle-btn:not(.active):hover { background: rgba(255,255,255,0.1); }
+
+  .sim-body { padding: 1.25rem; background: #fff; }
+
+  .week-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0.6rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .week-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #24272B;
+    min-width: 54px;
+    padding-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .bars {
+    flex: 1;
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    height: 52px;
+  }
+
+  .bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    gap: 3px;
+  }
+
+  .bar {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.4s ease;
+  }
+
+  .bar.sub { background: #24272B; }
+  .bar.opp { background: #2D8CFF; }
+  .bar.empty { background: #DDE0E5; height: 4px !important; border-radius: 2px; }
+
+  .legend {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: #24272B;
+    font-weight: 500;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .week-annotation {
+    font-size: 0.8rem;
+    color: #24272B;
+    min-width: 54px;
+    padding-top: 2px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .insight-box {
+    background: #F6EBFE;
+    border-left: 3px solid #24272B;
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #24272B;
+    margin-top: 0.5rem;
+    transition: opacity 0.3s;
+  }
+
+  .insight-box strong { font-weight: 700; }
+
+  .divider {
+    height: 1.5px;
+    background: #DDE0E5;
+    margin: 1rem 0;
+  }
+
+  .takeaways { margin-top: 0; }
+
+  .takeaway {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid #EEF0F3;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .takeaway:last-child { border-bottom: none; }
+
+  .takeaway-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #24272B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .takeaway-icon svg { width: 12px; height: 12px; fill: #E8CEFD; }
+
+  .budget-bar-wrap {
+    margin-bottom: 1rem;
+  }
+
+  .budget-track {
+    height: 18px;
+    background: #DDE0E5;
+    border-radius: 9px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .budget-fill {
+    height: 100%;
+    border-radius: 9px;
+    background: #24272B;
+    transition: width 0.5s ease;
+  }
+
+  .budget-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: #24272B;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .budget-label-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #2D8CFF;
+  }
+</style>
+</head>
+<body>
+
+<p class="intro">You may hear pros ask why their leads came in faster some months than others. Three concepts explain why. Select each term below to learn what it means, then use the simulator to see how they interact.</p>
+
+<div class="wrapper">
+
+  <!-- DEFINITIONS -->
+  <div class="def-row">
+    <div class="def-card" id="def-0" onclick="toggleDef(0)">
+      <div class="def-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="def-label">Term 1</div>
+      <div class="def-title">Spend Target</div>
+      <div class="def-hint">Select to learn more</div>
+      <div class="def-body">The pro's monthly lead budget — the full value of leads available to them, not the amount they are billed.</div>
+    </div>
+    <div class="def-card" id="def-1" onclick="toggleDef(1)">
+      <div class="def-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="def-label">Term 2</div>
+      <div class="def-title">Forecast</div>
+      <div class="def-hint">Select to learn more</div>
+      <div class="def-body">Lead Source's estimate of homeowner demand associated with the pro's tasks and coverage area. This shapes how many leads the pro is likely to receive.</div>
+    </div>
+    <div class="def-card" id="def-2" onclick="toggleDef(2)">
+      <div class="def-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="def-label">Term 3</div>
+      <div class="def-title">Pacing</div>
+      <div class="def-hint">Select to learn more</div>
+      <div class="def-body">Leads are spread across the month and shared among similar pros — not sent all at once. Pacing helps distribute homeowner demand evenly through the billing cycle.</div>
+    </div>
+  </div>
+
+  <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 1.5rem; color: #24272B;">Use the <strong>Normal demand</strong> and <strong>High demand</strong> buttons in the simulator below to see how these concepts affect lead distribution across a month.</p>
+
+  <!-- SIMULATOR -->
+  <div class="sim-box">
+    <div class="sim-header">
+      <span class="sim-header-title">Month simulator</span>
+      <div class="toggle-group">
+        <button class="toggle-btn active" id="btn-normal" onclick="setMode('normal')">Normal demand</button>
+        <button class="toggle-btn" id="btn-high" onclick="setMode('high')">High demand</button>
+      </div>
+    </div>
+
+    <div class="sim-body">
+
+      <div class="budget-bar-wrap">
+        <div class="budget-label-title">Budget used</div>
+        <div class="budget-track">
+          <div class="budget-fill" id="budget-fill" style="width: 78%"></div>
+        </div>
+        <div class="budget-labels">
+          <span>$0</span>
+          <span id="budget-pct">78% used by end of month</span>
+          <span>Full budget</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#24272B"></div>Subscription lead</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2D8CFF"></div>Boost</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#DDE0E5"></div>No activity</div>
+      </div>
+
+      <div id="chart"></div>
+
+      <div class="insight-box" id="insight-box">
+        <strong>Normal demand:</strong> Leads are distributed steadily across all four weeks. The pro uses most of their budget by month end. No Boosts appear — pacing keeps things balanced.
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="takeaways">
+        <div class="takeaway">
+          <div class="takeaway-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+          <span>Regardless of whether a project appears as a Boost or a Subscription lead, the homeowner must select the pro before it becomes a paid lead.</span>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+          <span>When pacing causes a project to appear as a Boost, the pro can review it and choose whether to purchase it individually.</span>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+          <span>Lead Source's goal is always to distribute Subscription leads throughout the month — Boosts are not a sign that something went wrong.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  var modes = {
+    normal: {
+      weeks: [
+        { label: 'Week 1', sub: 6, opp: 0 },
+        { label: 'Week 2', sub: 5, opp: 2 },
+        { label: 'Week 3', sub: 5, opp: 0 },
+        { label: 'Week 4', sub: 4, opp: 0 }
+      ],
+      budget: 78,
+      insight: '<strong>Normal demand:</strong> Leads are distributed steadily across the month. Notice that Boosts appeared in week 2 even with budget still available — this is normal. Boosts can surface at any point in the billing cycle, not just when the budget runs out.'
+    },
+    high: {
+      weeks: [
+        { label: 'Week 1', sub: 10, opp: 1 },
+        { label: 'Week 2', sub: 10, opp: 3 },
+        { label: 'Week 3', sub: 0, opp: 4 },
+        { label: 'Week 4', sub: 0, opp: 2 }
+      ],
+      budget: 100,
+      insight: '<strong>High demand:</strong> Most Subscription leads arrive in weeks 1 and 2, exhausting the budget early. Boosts appear throughout — including before the budget ran out. In weeks 3 and 4, all activity is Boosts. The pro can review each one and choose whether to purchase it individually.'
+    }
+  };
+
+  var currentMode = 'normal';
+
+  function toggleDef(index) {
+    var card = document.getElementById('def-' + index);
+    var isOpen = card.classList.contains('open');
+    for (var i = 0; i < 3; i++) document.getElementById('def-' + i).classList.remove('open');
+    if (!isOpen) {
+      card.classList.add('open');
+      card.classList.add('viewed');
+    }
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('btn-normal').classList.toggle('active', mode === 'normal');
+    document.getElementById('btn-high').classList.toggle('active', mode === 'high');
+    renderChart();
+  }
+
+  function renderChart() {
+    var data = modes[currentMode];
+    var maxVal = 12;
+    var chart = document.getElementById('chart');
+    chart.innerHTML = '';
+
+    data.weeks.forEach(function(week) {
+      var totalBars = Math.max(week.sub + week.opp, 1);
+      var row = document.createElement('div');
+      row.className = 'week-row';
+
+      var label = document.createElement('div');
+      label.className = 'week-label';
+      label.textContent = week.label;
+
+      var bars = document.createElement('div');
+      bars.className = 'bars';
+
+      var subCount = week.sub;
+      var oppCount = week.opp;
+      var total = subCount + oppCount;
+      var empty = Math.max(0, 12 - total);
+
+      for (var s = 0; s < subCount; s++) {
+        var bw = document.createElement('div');
+        bw.className = 'bar-wrap';
+        var b = document.createElement('div');
+        b.className = 'bar sub';
+        var h = Math.round((subCount / maxVal) * 44) + 8;
+        b.style.height = h + 'px';
+        bw.appendChild(b);
+        bars.appendChild(bw);
+      }
+
+      for (var o = 0; o < oppCount; o++) {
+        var bw2 = document.createElement('div');
+        bw2.className = 'bar-wrap';
+        var b2 = document.createElement('div');
+        b2.className = 'bar opp';
+        var h2 = Math.round((oppCount / maxVal) * 44) + 8;
+        b2.style.height = h2 + 'px';
+        bw2.appendChild(b2);
+        bars.appendChild(bw2);
+      }
+
+      for (var e = 0; e < empty; e++) {
+        var bw3 = document.createElement('div');
+        bw3.className = 'bar-wrap';
+        var b3 = document.createElement('div');
+        b3.className = 'bar empty';
+        bw3.appendChild(b3);
+        bars.appendChild(bw3);
+      }
+
+      var annot = document.createElement('div');
+      annot.className = 'week-annotation';
+      if (week.opp > 0 && week.sub === 0) {
+        annot.innerHTML = '<span style="color:#2D8CFF;font-size:0.75rem;font-weight:600;">Budget exhausted</span>';
+      } else if (week.opp > 0) {
+        annot.innerHTML = '<span style="color:#2D8CFF;font-size:0.75rem;font-weight:600;">Boosts appear</span>';
+      }
+
+      row.appendChild(label);
+      row.appendChild(bars);
+      row.appendChild(annot);
+      chart.appendChild(row);
+    });
+
+    document.getElementById('budget-fill').style.width = data.budget + '%';
+    document.getElementById('budget-pct').textContent = data.budget + '% used by end of month';
+    document.getElementById('insight-box').innerHTML = data.insight;
+  }
+
+  renderChart();
+</script>
+
+</body>
+</html>
